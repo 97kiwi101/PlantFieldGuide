@@ -2,146 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FloraLense - Wild Plant Guide</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FloraLense AI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     
     <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
 </head>
-<body>
+<body class="bg-dark text-light">
 
-    <nav class="navbar navbar-dark shadow-sm top-nav">
-        <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1"><i class="fa-solid fa-leaf"></i> FloraLense</span>
-            <div class="d-flex align-items-center">
-                <span id="user-status" class="text-light me-3 d-none">Welcome, Explorer</span>
-                <button type="button" class="btn btn-outline-light btn-sm" id="auth-btn" data-bs-toggle="modal" data-bs-target="#loginModal">
-                    Login
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <main class="container mt-4 mb-5 pb-5">
-        
-        <section id="search-section" class="view-section active-section">
-            <h2 class="earthy-heading">Identify by Attributes</h2>
-            <p class="text-muted">Filter through our database of wild plants.</p>
-            <div class="input-group mb-3 shadow-sm">
-                <input type="text" class="form-control earthy-input" placeholder="e.g., serrated leaves, yellow flower...">
-                <button class="btn btn-earthy-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
-            </div>
-            <div class="row g-3">
-                <div class="col-12 col-md-6">
-                    <div class="card earthy-card shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title"><i class="fa-solid fa-seedling text-success"></i> Broadleaf Plantain</h5>
-                            <p class="card-text text-muted small">Habitat: Disturbed soils, lawns.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="upload-section" class="view-section d-none text-center mt-5">
-            <h2 class="earthy-heading">AI Plant Identifier</h2>
-            
-            <div class="text-center mb-4">
-                <p class="text-muted fw-bold" id="status-text">Downloading AI Brain (~84MB)... Please wait.</p>
-            </div>
-            
-            <div class="camera-container position-relative mb-4 w-100 mx-auto shadow" style="max-width: 500px; border-radius: 1rem; overflow: hidden; background-color: #000; aspect-ratio: 3/4;">
-                <video id="camera-feed" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
-                <canvas id="photo-canvas" class="d-none"></canvas>
-            </div>
-            
-            <div class="d-grid gap-3 w-100 mx-auto" style="max-width: 400px;">
-                <button id="capture-btn" class="btn btn-earthy-primary btn-lg rounded-pill shadow" disabled>
-                    Identify Plant
-                </button>
-                <button id="reset-btn" class="btn btn-outline-secondary btn-lg rounded-pill d-none">
-                    Scan Another
-                </button>
-            </div>
-            
-            <div id="result-area" class="mt-4 text-center w-100 mx-auto" style="max-width: 400px;">
-                
-                <div id="loading-spinner" class="spinner-border text-success d-none mb-3" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-
-                <h3 id="plant-name" class="fw-bold text-success d-none mb-0"></h3>
-                <p id="plant-id" class="text-muted d-none small mb-3"></p>
-            
-                <div id="trefle-card" class="card earthy-card text-start d-none shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title text-success border-bottom pb-2">Plant Facts</h5>
-                        <p class="mb-1"><strong>Family:</strong> <span id="plant-family">Loading...</span></p>
-                        <p class="mb-1"><strong>Genus:</strong> <span id="plant-genus">Loading...</span></p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="saved-section" class="view-section d-none">
-            <h2 class="earthy-heading">Your Field Journal</h2>
-            <p class="text-muted">Plants you have identified and saved.</p>
-            <div id="saved-content">
-                <div class="alert alert-warning shadow-sm" role="alert">
-                    <i class="fa-solid fa-lock"></i> Please log in to view your saved plants.
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <nav class="navbar fixed-bottom bottom-nav shadow-lg">
-        <div class="container-fluid d-flex justify-content-around align-items-center">
-            <button class="nav-btn active" onclick="switchTab('search-section', this)">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <span>Search</span>
-            </button>
-            
-            <button class="nav-btn middle-btn shadow" onclick="switchTab('upload-section', this)">
-                <i class="fa-solid fa-leaf"></i>
-            </button>
-
-            <button class="nav-btn" onclick="switchTab('saved-section', this)">
-                <i class="fa-solid fa-book-open"></i>
-                <span>Saved</span>
-            </button>
-        </div>
-    </nav>
-
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content earthy-modal">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title earthy-heading">Explorer Login</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="login-error" class="alert alert-danger d-none small py-2">Invalid credentials.</div>
-                    <div class="mb-3">
-                        <label class="form-label">Username</label>
-                        <input type="text" class="form-control earthy-input" id="username" placeholder="Enter username">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="password" class="form-control earthy-input" id="password" placeholder="Enter password">
-                    </div>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-earthy-primary w-100" id="submit-login">Enter Journal</button>
-                </div>
-            </div>
-        </div>
+    <div class="fixed-top p-3 text-center z-3">
+        <h2 class="fw-bold text-success mb-0"><i class="fa-solid fa-leaf"></i> FloraLense</h2>
+        <p id="status-text" class="small text-warning fw-bold bg-dark bg-opacity-75 d-inline-block px-3 py-1 rounded-pill mt-2">
+            Loading AI Brain (84MB)...
+        </p>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="camera-wrapper">
+        <video id="camera-feed" autoplay playsinline></video>
+        <canvas id="photo-canvas" class="d-none"></canvas>
+    </div>
+
+    <div class="fixed-bottom p-4 z-3 d-flex flex-column align-items-center mb-3">
+        
+        <div id="loading-spinner" class="spinner-border text-success mb-3 d-none" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Analyzing...</span>
+        </div>
+
+        <div id="result-card" class="card bg-dark border-success w-100 shadow-lg d-none mb-3" style="max-width: 400px; border-width: 2px;">
+            <div class="card-body text-center">
+                <h3 id="plant-name" class="fw-bold text-success mb-0">Plant Name</h3>
+                <p id="plant-id" class="text-muted small mb-3 fst-italic">Scientific Name</p>
+                <div class="d-flex justify-content-between border-top border-secondary pt-2 text-start">
+                    <small><strong>Family:</strong> <span id="plant-family" class="text-light">...</span></small>
+                    <small><strong>Genus:</strong> <span id="plant-genus" class="text-light">...</span></small>
+                </div>
+            </div>
+        </div>
+
+        <button id="capture-btn" class="shutter-btn shadow-lg" disabled>
+            <i class="fa-solid fa-camera fa-2x text-dark"></i>
+        </button>
+
+        <button id="reset-btn" class="btn btn-outline-light rounded-pill px-4 py-2 shadow d-none mt-2">
+            <i class="fa-solid fa-rotate-right"></i> Scan Another
+        </button>
+
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
