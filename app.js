@@ -116,12 +116,28 @@ captureBtn.addEventListener('click', async () => {
     }
 });
 
-function displayResults(predictedId) {
+function displayResults(predictedIndex) {
     spinner.classList.add('d-none');
     statusText.textContent = "Identification Complete";
     
-    // Pull the data from the JSON file using the predicted Index
-    const plantInfo = plantDatabase[predictedId]; 
+    // --- THE TRANSLATOR ARRAY ---
+    // This array MUST perfectly match the alphabetical order of your training folders.
+    // Index 0 = "1355868", Index 1 = "1355920", etc.
+    const classToTrefleIdMap = [
+        "1355868", "1355920", "1355932", "1355936", "1355937", 
+        "1355955", "1355959", "1355961", "1355978", "1355990", 
+        "1356003", "1356022", "1356037", "1356055", "1356075", 
+        "1356076", "1356111", "1356126", "1356138", "1356257",
+        "1356278", "1356279", "1356309", "1356379", "1356380",
+        "1356382", "1356420", "1356421", "1356428", "1356469"
+        // ... YOU MUST ADD ALL 1081 FOLDER NAMES HERE IN ALPHABETICAL ORDER ...
+    ];
+
+    // Translate the AI's math guess (e.g., 0) into the Trefle ID (e.g., "1355868")
+    const trefleId = classToTrefleIdMap[predictedIndex];
+
+    // Now pull the data from the JSON file using the Trefle ID!
+    const plantInfo = plantDatabase[trefleId]; 
 
     if (plantInfo) {
         document.getElementById('plant-name').textContent = plantInfo.name || "Unknown Name";
@@ -129,7 +145,8 @@ function displayResults(predictedId) {
         document.getElementById('plant-family').textContent = plantInfo.family || 'Unknown';
         document.getElementById('plant-genus').textContent = plantInfo.genus || 'Unknown';
     } else {
-        document.getElementById('plant-name').textContent = `Species ID: ${predictedId}`;
+        // Fallback if somehow the ID isn't in the JSON
+        document.getElementById('plant-name').textContent = `System ID: ${trefleId}`;
         document.getElementById('plant-id').textContent = "Not found in local database.";
         document.getElementById('plant-family').textContent = "-";
         document.getElementById('plant-genus').textContent = "-";
