@@ -1,0 +1,117 @@
+/* Earthy Color Palette */
+:root {
+    --bg-parchment: #f4f1ea;
+    --dark-green: #2E4F2E;
+    --sage-green: #5C7A58;
+    --earth-brown: #8B5A2B;
+    --light-brown: #d8c3a5;
+    --text-dark: #3e3b32;
+}
+
+body {
+    background-color: var(--bg-parchment);
+    color: var(--text-dark);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Typography & Colors */
+.earthy-heading {
+    color: var(--dark-green);
+    font-weight: 600;
+}
+
+.text-success { color: var(--sage-green) !important; }
+
+/* Top Navigation */
+.top-nav {
+    background-color: var(--dark-green);
+}
+
+/* Custom Inputs & Buttons */
+.earthy-input {
+    background-color: #fff;
+    border: 1px solid var(--light-brown);
+}
+.earthy-input:focus {
+    border-color: var(--sage-green);
+    box-shadow: 0 0 0 0.25rem rgba(92, 122, 88, 0.25);
+}
+
+.btn-earthy-primary {
+    background-color: var(--sage-green);
+    color: white;
+    border: none;
+}
+.btn-earthy-primary:hover {
+    background-color: var(--dark-green);
+    color: white;
+}
+
+/* Modals & Cards */
+.earthy-modal, .earthy-card {
+    background-color: #fdfdf9;
+    border: 1px solid var(--light-brown);
+    border-radius: 12px;
+}
+
+/* Upload Box Styling */
+.upload-box {
+    background-color: #fff;
+    border: 3px dashed var(--light-brown);
+    border-radius: 20px;
+    padding: 50px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.upload-box:hover {
+    border-color: var(--sage-green);
+    background-color: #f0f5f0;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    background-color: white;
+    border-top: 1px solid #e0e0e0;
+    padding-bottom: env(safe-area-inset-bottom); /* For modern mobile phones */
+    height: 70px;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    color: #888;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.8rem;
+    transition: color 0.3s;
+    width: 30%;
+}
+.nav-btn i {
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+}
+.nav-btn.active {
+    color: var(--dark-green);
+}
+
+/* Special Middle Button */
+.middle-btn {
+    background-color: var(--earth-brown);
+    color: white !important;
+    border-radius: 50%;
+    width: 65px;
+    height: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(-25px); /* Pushes it up over the nav bar */
+    border: 4px solid var(--bg-parchment);
+}
+.middle-btn i {
+    font-size: 1.8rem;
+    margin-bottom: 0;
+}
+.middle-btn:hover {
+    background-color: #6e4620;
+}
